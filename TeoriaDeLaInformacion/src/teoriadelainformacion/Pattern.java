@@ -13,11 +13,9 @@ public class Pattern implements Comparable<Pattern> {
 
     private String pattern;
     private Integer value;
-    private String key;
 
-    public Pattern(String key, String pattern, Integer value) {
+    public Pattern(String pattern, Integer value) {
         this.pattern = pattern;
-        this.key = key;
         this.value = value;
     }
 
@@ -33,16 +31,8 @@ public class Pattern implements Comparable<Pattern> {
         return value;
     }
 
-    public void setFreq(Integer value) {
+    public void setValue(Integer value) {
         this.value = value;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     @Override

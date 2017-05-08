@@ -25,7 +25,7 @@ public class TeoriaDeLaInformacion {
 
     private static String RESOURCES = System.getProperty("user.dir") + "\\Resources";
     private static HashMap<String, String> map = new HashMap<String, String>();
-    private static char[] alphabet = "ACDEFGHIKLMNOPQRSTUVWY".toCharArray();
+    public static char[] alphabet = "ACDEFGHIKLMNOPQRSTUVWY".toCharArray();
     private static List<String> fileContent = new ArrayList<String>();
 
     /**
@@ -44,10 +44,6 @@ public class TeoriaDeLaInformacion {
 
         map = gen.getMap(map);
 
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-        }
     }
 
     private static BufferedReader readFile() {

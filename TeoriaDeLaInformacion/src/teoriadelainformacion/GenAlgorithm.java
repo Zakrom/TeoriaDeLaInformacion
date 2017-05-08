@@ -5,14 +5,8 @@
  */
 package teoriadelainformacion;
 
-import java.io.BufferedReader;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -28,14 +22,15 @@ public class GenAlgorithm {
     private List<Pattern> workList = new ArrayList<Pattern>();
     private PriorityQueue<Pattern> queue = new PriorityQueue<Pattern>();
     private List<String> fileContent;
+    private Integer mutationChance = 10;
+    private Integer iterations = 100;
 
     GenAlgorithm(HashMap<String, String> map, List<String> fileContent) {
         results.putAll(map);
         this.fileContent = fileContent;
-        evaluate(fileContent);
+        evaluate();
         fillQueue();
-        workList.addAll(patterns);
-        start();
+        run(iterations);
     }
 
     HashMap<String, String> getMap(HashMap<String, String> map) {
@@ -44,16 +39,16 @@ public class GenAlgorithm {
 
     private void fillMap() {
         results.clear();
+        Integer count = 0;
         for (Pattern pattern : patterns) {
-            results.put(pattern.getKey(), pattern.getPattern());
+            results.put(count.toString(), pattern.getPattern());
+            count += 1;
         }
     }
 
-    private void evaluate(List<String> fileContent) {
+    private void evaluate() {
         for (Map.Entry<String, String> entry : results.entrySet()) {
-            String key = entry.getKey();
             String value = entry.getValue();
-            Double evaluation = 0.0;
 
             Integer count = 0;
             for (String line : fileContent) {
@@ -61,7 +56,7 @@ public class GenAlgorithm {
                     count += getOcurrences(value, line);
                 }
             }
-            Pattern pattern = new Pattern(key, value, count * (value.length() - 1));
+            Pattern pattern = new Pattern(value, count * (value.length() - 1));
             patterns.add(pattern);
         }
     }
@@ -85,9 +80,61 @@ public class GenAlgorithm {
         }
     }
 
-    private void start() {
-        pickElements();
-        crossover();
+    private void evaluation() {
+        for (Pattern obj : workList) {
+            String pattern = obj.getPattern();
+
+            Integer count = 0;
+            for (String line : fileContent) {
+                if (!line.startsWith(">")) {
+                    count += getOcurrences(pattern, line);
+                }
+            }
+            obj.setValue(count);
+        }
+    }
+
+    public void run(Integer iterations) {
+        for (int n = 0; n < iterations; n++) {
+
+            pickElements();
+            crossover();
+            mutation();
+            evaluation();
+
+            for (Pattern pattern : workList) {
+                queue.add(pattern);
+            }
+            patterns.clear();
+
+            for (int i = 0; i < 10; i++) {
+                boolean inserted = false;
+
+                while (!inserted) {
+                    Pattern pattern = queue.poll();
+                    if (!patterns.contains(pattern)) {
+                        patterns.add(pattern);
+                        inserted = true;
+                    }
+
+                }
+                for (Pattern pattern : patterns) {
+                    queue.add(pattern);
+                }
+            }
+            results.clear();
+
+            Integer count = 0;
+            Integer total = 0;
+            for (Pattern pattern : patterns) {
+                results.put(count.toString(), pattern.getPattern());
+                total += pattern.getValue();
+                count++;
+            }
+            System.out.println(total.toString());
+            workList.clear();
+        }
+
     }
 
     private void pickElements() {
@@ -95,7 +142,7 @@ public class GenAlgorithm {
         for (Pattern pattern : patterns) {
             total += pattern.getValue();
         }
-        workList.clear();
+
         for (int i = 0; i < 10; i++) {
             Integer picker = TeoriaDeLaInformacion.nextRandomInt(total);
             int sum = 0;
@@ -109,8 +156,31 @@ public class GenAlgorithm {
     }
 
     private void crossover() {
+        results.clear();
         for (int i = 0; i < 10; i++) {
 
+            Pattern pattern1 = workList.get(i);
+            i++;
+            Pattern pattern2 = workList.get(i);
+
+            int x = TeoriaDeLaInformacion.nextRandomInt(pattern1.getPattern().length() - 1) + 1;
+            String string1 = pattern1.getPattern();
+            pattern1.setPattern(pattern1.getPattern().substring(0, x) + pattern2.getPattern().substring(x, string1.length()));
+            pattern2.setPattern(pattern2.getPattern().substring(0, x) + string1.substring(x, string1.length()));
+
+        }
+    }
+
+    private void mutation() {
+        String string;
+        for (Pattern pattern : workList) {
+            string = pattern.getPattern();
+            for (int i = 0; i < string.length(); i++) {
+                if (TeoriaDeLaInformacion.nextRandomInt(100) <= mutationChance) {
+                    string = string.replace(string.substring(i, i + 1),
+                            Character.toString(TeoriaDeLaInformacion.alphabet[TeoriaDeLaInformacion.nextRandomInt(22)]));
+                }
+            }
         }
     }
 
