@@ -27,6 +27,8 @@ public class TeoriaDeLaInformacion {
     private static HashMap<String, String> map = new HashMap<String, String>();
     public static char[] alphabet = "ACDEFGHIKLMNOPQRSTUVWY".toCharArray();
     private static List<String> fileContent = new ArrayList<String>();
+    private static List<String> replacedFileContent = new ArrayList<String>();
+    private static List<String> binaryFile = new ArrayList<String>();
 
     /**
      * @param args the command line arguments
@@ -34,15 +36,19 @@ public class TeoriaDeLaInformacion {
     public static void main(String[] args) throws IOException {
         BufferedReader rdr = readFile();
         fillDefaultMap(2);
-
         String line;
         while ((line = rdr.readLine()) != null) {
             fileContent.add(line);
         }
-
         GenAlgorithm gen = new GenAlgorithm(map, fileContent);
-
         map = gen.getMap(map);
+
+        replacedFileContent = replaceStrings();
+
+        for (String arg : replacedFileContent) {
+            System.out.println(arg);
+        }
+        //Huffman huffman = new Huffman();
 
     }
 
@@ -80,6 +86,22 @@ public class TeoriaDeLaInformacion {
             }
             map.put(String.valueOf(i), word);
         }
+    }
+
+    private static List<String> replaceStrings() {
+        List<String> replacedStrings = new ArrayList<String>();
+
+        for (String line : fileContent) {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                line = line.replaceAll(value, key);
+            }
+            replacedStrings.add(line);
+
+        }
+
+        return replacedStrings;
     }
 
 }

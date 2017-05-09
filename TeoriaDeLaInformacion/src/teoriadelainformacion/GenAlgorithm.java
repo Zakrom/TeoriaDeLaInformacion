@@ -23,13 +23,13 @@ public class GenAlgorithm {
     private PriorityQueue<Pattern> queue = new PriorityQueue<Pattern>();
     private List<String> fileContent;
     private Integer mutationChance = 10;
-    private Integer iterations = 100;
+    private Integer iterations = 97;
 
     GenAlgorithm(HashMap<String, String> map, List<String> fileContent) {
         results.putAll(map);
         this.fileContent = fileContent;
         evaluate();
-        fillQueue();
+        queue.addAll(patterns);
         run(iterations);
     }
 
@@ -74,12 +74,6 @@ public class GenAlgorithm {
         return count;
     }
 
-    private void fillQueue() {
-        for (Pattern pattern : patterns) {
-            queue.offer(pattern);
-        }
-    }
-
     private void evaluation() {
         for (Pattern obj : workList) {
             String pattern = obj.getPattern();
@@ -102,26 +96,24 @@ public class GenAlgorithm {
             mutation();
             evaluation();
 
-            for (Pattern pattern : workList) {
-                queue.add(pattern);
-            }
+            queue.addAll(workList);
+
             patterns.clear();
-
+            boolean inserted = false;
             for (int i = 0; i < 10; i++) {
-                boolean inserted = false;
-
-                while (!inserted) {
+                inserted = false;
+                do {
                     Pattern pattern = queue.poll();
                     if (!patterns.contains(pattern)) {
                         patterns.add(pattern);
                         inserted = true;
                     }
 
-                }
-                for (Pattern pattern : patterns) {
-                    queue.add(pattern);
-                }
+                } while (!inserted);
+
             }
+            queue.addAll(patterns);
+
             results.clear();
 
             Integer count = 0;
@@ -131,7 +123,6 @@ public class GenAlgorithm {
                 total += pattern.getValue();
                 count++;
             }
-            System.out.println(total.toString());
             workList.clear();
         }
 
@@ -150,6 +141,7 @@ public class GenAlgorithm {
                 sum += pattern.getValue();
                 if (sum >= picker) {
                     workList.add(pattern);
+                    break;
                 }
             }
         }
