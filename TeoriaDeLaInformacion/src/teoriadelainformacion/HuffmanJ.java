@@ -16,6 +16,7 @@ public class HuffmanJ {
 
 	public static double getCompressionRate() {
 		double sum = 0;
+
 		for (HuffmanResult obj : results) {
 			sum += obj.freq * obj.binArray.length() / 100.0;
 		}
@@ -119,7 +120,7 @@ public class HuffmanJ {
 	public HuffmanJ() {
 	}
 
-	public static void run(char[] wordArray, int[] charFreqs) {
+	public static List<HuffmanResult> run(char[] wordArray, int[] charFreqs) {
 		if (charFreqs.length != wordArray.length) {
 			System.out.println("Arreglo de caracteres y arreglo de frecuencias no tienen el mismo tamaño");
 		} else {
@@ -128,8 +129,8 @@ public class HuffmanJ {
 			getCodes(tree, new StringBuffer());
 			entropia = entropia * (-1);
 			infMut = infMut * (-1);
-			System.out.println("Informacion mutua = " + infMut + "\nEntropia = " + entropia + "\nRadio de Compresion: "
-					+ getCompressionRate());
 		}
+
+		return results;
 	}
 }

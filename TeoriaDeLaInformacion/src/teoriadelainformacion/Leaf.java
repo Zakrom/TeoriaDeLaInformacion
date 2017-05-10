@@ -7,11 +7,11 @@ package teoriadelainformacion;
 
 public class Leaf extends Tree {
 
-    char value;
+	char value;
 
-    public Leaf(int freq, char value) {
-        super(freq);
-        this.value = value;
-    }
+	public Leaf(int freq, char value) {
+		super(freq);
+		this.value = value;
+	}
 
 }

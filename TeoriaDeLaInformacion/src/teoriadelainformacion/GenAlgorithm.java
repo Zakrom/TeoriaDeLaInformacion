@@ -23,7 +23,7 @@ public class GenAlgorithm {
 	private PriorityQueue<Pattern> queue = new PriorityQueue<Pattern>();
 	private List<String> fileContent;
 	private Integer mutationChance = 50;
-	private Integer iterations = 100;
+	private Integer iterations = 1000;
 
 	GenAlgorithm(HashMap<String, String> map, List<String> fileContent) {
 		results.putAll(map);
@@ -44,6 +44,7 @@ public class GenAlgorithm {
 		// System.out.println(queue.poll().getPattern());
 		// }
 
+		Integer count = 0;
 		results.clear();
 		for (int i = 0; i < 10; i++) {
 			boolean inserted = false;
@@ -53,10 +54,13 @@ public class GenAlgorithm {
 				if (results.size() == 0 || !pattern.getPattern().equals(results.get((i - 1) + ""))) {
 					results.put(i + "", pattern.getPattern());
 					inserted = true;
-					System.out.println("Inserted: " + pattern.getPattern());
+					System.out.println("Inserted: " + pattern.getPattern() + " with a value of: " + pattern.getValue());
+					count += pattern.getValue();
 				}
 			}
+
 		}
+		System.out.println("For a total of :" + count);
 	}
 
 	private void evaluate() {
@@ -158,17 +162,14 @@ public class GenAlgorithm {
 	private void crossover() {
 		results.clear();
 		for (int i = 0; i < 10; i++) {
-
 			Pattern pattern1 = workList.get(i);
 			i++;
 			Pattern pattern2 = workList.get(i);
-
 			int x = TeoriaDeLaInformacion.nextRandomInt(pattern1.getPattern().length() - 1) + 1;
 			String string1 = pattern1.getPattern();
 			pattern1.setPattern(
 					pattern1.getPattern().substring(0, x) + pattern2.getPattern().substring(x, string1.length()));
 			pattern2.setPattern(pattern2.getPattern().substring(0, x) + string1.substring(x, string1.length()));
-
 		}
 	}
 
