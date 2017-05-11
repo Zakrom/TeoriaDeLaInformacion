@@ -3,6 +3,7 @@ package teoriadelainformacion;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -19,6 +20,7 @@ public class Huffman {
 	List<HuffmanResult> results = new ArrayList<HuffmanResult>();
 	final int R = 256;// Todos los caracteres ASCII
 	private static String binFileContent;
+	List<String> fileContent = new ArrayList<String>();
 
 	//
 	HashMap<Character, Integer> freqs = new HashMap<Character, Integer>();
@@ -50,6 +52,40 @@ public class Huffman {
 		saveBinArrays();
 	}
 
+	public Huffman(String bytes) throws IOException {
+		Properties properties = TeoriaDeLaInformacion.loadProperties("characters.properties");
+		binArrays = fillMap(properties);
+		fileContent = replaceBinary(bytes);
+	}
+
+	private List<String> replaceBinary(String bytes) {
+		String lines = "";
+		Integer index = 0;
+		for (int i = 0; i < bytes.length(); i++) {
+			for (Entry<Character, String> entry : binArrays.entrySet()) {
+				if (entry.getValue().equals(bytes.substring(index, i))) {
+					lines = lines.concat(entry.getKey().toString());
+					index = i;
+					break;
+				}
+			}
+		}
+		List<String> linesAsList = new ArrayList<String>(Arrays.asList(lines.split("\\n")));
+		return linesAsList;
+	}
+
+	private static HashMap<Character, String> fillMap(Properties properties) {
+		HashMap<Character, String> map = new HashMap<Character, String>();
+		for (Entry<Object, Object> entry : properties.entrySet()) {
+			String key = (String) entry.getKey();
+			String val = (String) entry.getValue();
+			byte[] bytes = DatatypeConverter.parseHexBinary(key);
+			String realKey = new String(bytes);
+			map.put(realKey.charAt(0), val);
+		}
+		return map;
+	}
+
 	private void saveBinArrays() throws IOException {
 		Properties prop = new Properties();
 		FileOutputStream fos = new FileOutputStream(TeoriaDeLaInformacion.RESOURCES + "characters.properties");
@@ -63,7 +99,6 @@ public class Huffman {
 		}
 		prop.store(fos, "Generated tree,stored and needed for decompression");
 		fos.close();
-
 	}
 
 	private void getFreqs(List<String> replacedFileContent) {
@@ -93,6 +128,10 @@ public class Huffman {
 
 	public String getBinString() {
 		return binFileContent;
+	}
+
+	public List<String> getFileContent() {
+		return fileContent;
 	}
 
 }
