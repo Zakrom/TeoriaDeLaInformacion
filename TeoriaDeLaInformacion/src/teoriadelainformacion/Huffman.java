@@ -1,9 +1,14 @@
 package teoriadelainformacion;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Properties;
+
+import javax.xml.bind.DatatypeConverter;
 
 public class Huffman {
 
@@ -22,7 +27,7 @@ public class Huffman {
 	char[] wordArray;
 	int[] charFreqs;
 
-	public Huffman(List<String> replacedFileContent) {
+	public Huffman(List<String> replacedFileContent) throws IOException {
 		getFreqs(replacedFileContent);
 		wordArray = new char[freqs.size()];
 		charFreqs = new int[freqs.size()];
@@ -42,6 +47,23 @@ public class Huffman {
 			binArrays.put(val.getValue(), val.getBinArray());
 		}
 		fillBinString(replacedFileContent);
+		saveBinArrays();
+	}
+
+	private void saveBinArrays() throws IOException {
+		Properties prop = new Properties();
+		FileOutputStream fos = new FileOutputStream(TeoriaDeLaInformacion.RESOURCES + "characters.properties");
+
+		for (Entry<Character, String> entry : binArrays.entrySet()) {
+			String key = entry.getKey().toString();
+			String val = entry.getValue();
+			byte[] bytes = key.getBytes("UTF-8");
+			String hexString = DatatypeConverter.printHexBinary(bytes);
+			prop.setProperty(hexString, val);
+		}
+		prop.store(fos, "Generated tree,stored and needed for decompression");
+		fos.close();
+
 	}
 
 	private void getFreqs(List<String> replacedFileContent) {

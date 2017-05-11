@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  */
 public class TeoriaDeLaInformacion {
 
-	private static String RESOURCES = System.getProperty("user.dir") + File.separator + "Resources" + File.separator;
+	public static String RESOURCES = System.getProperty("user.dir") + File.separator + "Resources" + File.separator;
 	private static HashMap<String, String> map = new HashMap<String, String>();
 	public static char[] alphabet = "ACDEFGHIKLMNOPQRSTUVWY".toCharArray();
 	private static List<String> fileContent = new ArrayList<String>();
