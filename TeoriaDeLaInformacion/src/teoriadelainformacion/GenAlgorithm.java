@@ -76,9 +76,9 @@ public class GenAlgorithm {
         Integer n = 0;
         results.clear();
         for (Pattern x : bestPatterns) {
-
             allQueue.add(x);
             results.put(n.toString(), x.getPattern());
+            n++;
         }
     }
 

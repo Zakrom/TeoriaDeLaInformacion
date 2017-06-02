@@ -160,8 +160,18 @@ public class TeoriaDeLaInformacion {
                 gen.makeMap(i);
             }
         }
+        DecimalFormat formatter = new DecimalFormat("#0.0000");
 
         replacedFileContent = replaceStrings();
+
+        Integer afterReplaceSize = 0;
+
+        for (String s : replacedFileContent) {
+            afterReplaceSize += s.length();
+        }
+        Double substitution = 100.0 - ((100.0 / size) * afterReplaceSize);
+        System.out.println("Porcentaje de archivo sustituido:" + formatter.format(substitution));
+
         Huffman huffman = new Huffman(replacedFileContent);
         String binFileContent = huffman.getBinString();
 
@@ -169,9 +179,7 @@ public class TeoriaDeLaInformacion {
         System.out.println("Nuevo tama\u00f1o: " + binFileContent.length());
         Double compressionRatio = size * 8.0 / binFileContent.length();
 
-        DecimalFormat formatter = new DecimalFormat("#0.0000");
-
-        System.out.println("Radio de compresion = " + formatter.format(compressionRatio));
+        System.out.println("Radio de compresion = " + formatter.format(compressionRatio * 10));
         // ensure (n mod 8 bits) == 0
         StringBuilder bldr = new StringBuilder();
         if (binFileContent.length() % 8 == 0) {
@@ -206,7 +214,7 @@ public class TeoriaDeLaInformacion {
         }
     }
 
-    private static void writeFile(String fileName, List<String> newFileContent) throws FileNotFoundException, UnsupportedEncodingException {
+    public static void writeFile(String fileName, List<String> newFileContent) throws FileNotFoundException, UnsupportedEncodingException {
         PrintWriter writer = new PrintWriter(RESOURCES + fileName, "UTF-8");
         for (String line : newFileContent) {
             writer.println(line);
