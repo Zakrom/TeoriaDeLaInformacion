@@ -177,7 +177,7 @@ public class TeoriaDeLaInformacion {
 
         System.out.println("Tama\u00f1o original: " + size * 8);
         System.out.println("Nuevo tama\u00f1o: " + binFileContent.length());
-        Double compressionRatio = size * 8.0 / binFileContent.length();
+        Double compressionRatio = size * 8.0 / binFileContent.length() / 10;
 
         System.out.println("Radio de compresion = " + formatter.format(compressionRatio * 10));
         // ensure (n mod 8 bits) == 0

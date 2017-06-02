@@ -6,13 +6,13 @@ public class HuffmanResult {
     public char value;
     public String binArray;
 
-    HuffmanResult(char value, int freq, String binArray) {
+    public HuffmanResult(char value, int freq, String binArray) {
         this.freq = freq;
         this.value = value;
         this.binArray = binArray;
     }
 
-    HuffmanResult() {
+    public HuffmanResult() {
     }
 
     @Override

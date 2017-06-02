@@ -11,14 +11,14 @@ package teoriadelainformacion;
  */
 public class Tree implements Comparable<Tree> {
 
-	public int frequency;
+    public int frequency;
 
-	public Tree(int frequency) {
-		this.frequency = frequency;
-	}
+    public Tree(int frequency) {
+        this.frequency = frequency;
+    }
 
-	@Override
-	public int compareTo(Tree other) {
-		return this.frequency - other.frequency;
-	}
+    @Override
+    public int compareTo(Tree other) {
+        return this.frequency - other.frequency;
+    }
 }

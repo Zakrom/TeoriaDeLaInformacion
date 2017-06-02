@@ -125,10 +125,12 @@ public class HuffmanJ {
     }
 
     public static List<HuffmanResult> run(char[] wordArray, int[] charFreqs) {
+        Tree tree = null;
+
         if (charFreqs.length != wordArray.length) {
             System.out.println("Arreglo de caracteres y arreglo de frecuencias no tienen el mismo tamaño");
         } else {
-            Tree tree = buildTree(charFreqs, wordArray);
+            tree = buildTree(charFreqs, wordArray);
 
             //ESTE TAMBIEN
             System.out.println("SIMBOLO\tFRECUENCIA\tCODIGO");
@@ -144,6 +146,7 @@ public class HuffmanJ {
             infMut = infMut * (-1);
         }
 
+        MakeGraph.graph(tree);
         return results;
     }
 }
